@@ -55,23 +55,26 @@ def get_sponsors():
     try:
         import urllib.request, csv, io
         SHEET_ID = "1vT0pZZbWovxsUYq9-rHlQgIN7kdG-bh2iXqlmb7AKBE"
-        url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=0"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as r:
+        # Try gviz JSON endpoint - more reliable than CSV export
+        url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form_Responses"
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        })
+        with urllib.request.urlopen(req, timeout=15) as r:
             content = r.read().decode("utf-8")
         out = []
         reader = csv.reader(io.StringIO(content))
         next(reader)  # skip header row
         for row in reader:
             try:
-                # Column B = Name (index 1), Column C = Amount (index 2)
-                name   = str(row[1]).strip()
-                amount = float(str(row[2]).replace(",", "").replace("₹", "").strip())
+                name   = str(row[1]).strip().strip('"')
+                amount = float(str(row[2]).replace(",", "").replace("₹", "").strip().strip('"'))
                 if name and amount > 0:
                     out.append({"name": name, "amount": amount})
             except (IndexError, ValueError):
                 continue
         out.sort(key=lambda x: x["amount"], reverse=True)
+        print(f"Loaded {len(out)} sponsors from sheet")
         return out if out else DEMO
     except Exception as e:
         print("Sheet error:", e)
