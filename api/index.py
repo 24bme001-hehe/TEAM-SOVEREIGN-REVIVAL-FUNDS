@@ -46,7 +46,7 @@ DEMO = [
     {"name": "Jinay Panchal",   "amount": 1500},
     {"name": "Param Mehta",   "amount": 1500},
     {"name": "Shishir Raghva",   "amount": 1500},
-    {"name": "Himadri ",   "amount": 100}
+    {"name": "Himadri ",   "amount": 500}
    
 ]
 
