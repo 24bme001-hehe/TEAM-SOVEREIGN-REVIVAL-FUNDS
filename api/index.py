@@ -124,7 +124,11 @@ def build_page(sponsors):
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="screen-orientation" content="portrait"/>
+<style>
+  html {{ touch-action: pan-y; }}
+</style>
 <title>Team Sovereign — Phoenix eBaja Sponsors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@700&family=Exo+2:wght@400;600;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
@@ -157,12 +161,12 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   width:clamp(100px,14vw,170px);
   height:auto;
   z-index:100;
-  filter:brightness(1.4) drop-shadow(0 0 20px rgba(240,192,64,.9));
+  filter:invert(1) brightness(1.8) drop-shadow(0 0 20px rgba(240,192,64,.9));
   animation:logoGlow 3s ease-in-out infinite alternate;
 }}
 @keyframes logoGlow{{
-  from{{filter:brightness(1.2) drop-shadow(0 0 12px rgba(240,192,64,.6));}}
-  to  {{filter:brightness(1.6) drop-shadow(0 0 36px rgba(240,192,64,1));}}
+  from{{filter:invert(1) brightness(1.5) drop-shadow(0 0 12px rgba(240,192,64,.6));}}
+  to  {{filter:invert(1) brightness(2.0) drop-shadow(0 0 36px rgba(240,192,64,1));}}
 }}
 
 .team-lbl{{font-family:'Bebas Neue',sans-serif;font-size:clamp(.9rem,2vw,1.1rem);
@@ -273,7 +277,15 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
         color:var(--silver);opacity:.4;letter-spacing:.15em}}
 
 @keyframes fadeUp{{from{{opacity:0;transform:translateY(24px)}}to{{opacity:1;transform:translateY(0)}}}}
-@media(max-width:480px){{.stats{{gap:1rem}}.stat{{padding:.6rem 1rem}}}}
+@media(max-width:480px){{
+  .stats{{gap:1rem}}
+  .stat{{padding:.6rem 1rem}}
+  .collage{{gap:.4rem .8rem;padding:1.2rem 1rem}}
+  .sovereign-logo{{width:80px;top:10px;left:10px}}
+  .title{{font-size:2rem}}
+  body{{overflow-x:hidden}}
+  .page{{padding:0 .5rem 2rem}}
+}}
 </style>
 </head>
 <body>
