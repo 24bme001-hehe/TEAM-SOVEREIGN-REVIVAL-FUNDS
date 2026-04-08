@@ -41,18 +41,13 @@ if _logo_path.exists():
 
 # ── demo sponsors shown when sheet isn't configured ──────────────────────────
 DEMO = [
-    {"name": "Rahul Sharma",  "amount": 5000},
-    {"name": "Priya Patel",   "amount": 3500},
-    {"name": "Arjun Mehta",   "amount": 2000},
-    {"name": "Sneha Desai",   "amount": 1500},
-    {"name": "Karan Joshi",   "amount": 1000},
-    {"name": "Nisha Gupta",   "amount": 800},
-    {"name": "Vikram Singh",  "amount": 600},
-    {"name": "Ananya Rao",    "amount": 500},
-    {"name": "Rohan Kapoor",  "amount": 400},
-    {"name": "Divya Nair",    "amount": 250},
-    {"name": "Siddharth K",   "amount": 200},
-    {"name": "Meera Iyer",    "amount": 150},
+    {"name": "Jigar Modi",  "amount": 1500},
+    {"name": "Raj Choksi",   "amount": 1500},
+    {"name": "Jinay Panchal",   "amount": 1500},
+    {"name": "Param Mehta",   "amount": 1500},
+    {"name": "Shishir Raghva",   "amount": 1500},
+    {"name": "Himadri ",   "amount": 100}
+   
 ]
 
 
