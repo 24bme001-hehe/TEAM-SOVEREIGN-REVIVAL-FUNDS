@@ -117,8 +117,7 @@ def build_page(sponsors):
         '<p style="color:#c8d8e8;opacity:.6;letter-spacing:.2em">'
         'No sponsors yet — be the first!</p>')
 
-    logo_html = (f'<img class="sovereign-logo" src="{logo_src}" alt="Sovereign Logo"/>'
-                 if logo_src else '')
+    logo_html = ''
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -169,7 +168,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   to  {{filter:invert(1) brightness(2.0) drop-shadow(0 0 36px rgba(240,192,64,1));}}
 }}
 
-.team-lbl{{font-family:'Bebas Neue',sans-serif;font-size:clamp(.9rem,2vw,1.1rem);
+.team-lbl{{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);
            letter-spacing:.55em;color:var(--blue2);margin-bottom:.2rem}}
 .title{{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,5.5rem);
         letter-spacing:.06em;line-height:1;
