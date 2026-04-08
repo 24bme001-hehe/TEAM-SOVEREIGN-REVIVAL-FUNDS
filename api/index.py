@@ -41,42 +41,38 @@ if _logo_path.exists():
 
 # ── demo sponsors shown when sheet isn't configured ──────────────────────────
 DEMO = [
-    {"name": "Jigar Modi",  "amount": 10},
-    {"name": "Raj Choksi",   "amount": 10},
-    {"name": "Jinay Panchal",   "amount": 10},
-    {"name": "Param Mehta",   "amount": 10},
-    {"name": "Shishir Raghva",   "amount": 10},
+    {"name": "Jigar Modi",  "amount": 2500},
+    {"name": "Raj Choksi",   "amount": 2500},
+    {"name": "Jinay Panchal",   "amount": 2500},
+    {"name": "Param Mehta",   "amount": 2500},
+    {"name": "Shishir Raghva",   "amount": 2500},
     
    
 ]
 
 
 def get_sponsors():
-    if not SHEETS_AVAILABLE or not SHEET_ID:
-        return DEMO
     try:
-        creds_env = os.environ.get("GOOGLE_CREDENTIALS")
-        if creds_env:
-            creds = Credentials.from_service_account_info(
-                json.loads(creds_env), scopes=SCOPES)
-        else:
-            creds = Credentials.from_service_account_file(
-                "credentials.json", scopes=SCOPES)
-
-        gc   = gspread.authorize(creds)
-        rows = gc.open_by_key(SHEET_ID).sheet1.get_all_values()
-        out  = []
-        for row in rows[1:]:
+        import urllib.request, csv, io
+        SHEET_ID = "1vT0pZZbWovxsUYq9-rHlQgIN7kdG-bh2iXqlmb7AKBE"
+        url = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv&gid=0"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            content = r.read().decode("utf-8")
+        out = []
+        reader = csv.reader(io.StringIO(content))
+        next(reader)  # skip header row
+        for row in reader:
             try:
-                name   = str(row[NAME_COL]).strip()
-                amount = float(str(row[AMOUNT_COL])
-                               .replace(",", "").replace("₹", "").strip())
+                # Column B = Name (index 1), Column C = Amount (index 2)
+                name   = str(row[1]).strip()
+                amount = float(str(row[2]).replace(",", "").replace("₹", "").strip())
                 if name and amount > 0:
                     out.append({"name": name, "amount": amount})
             except (IndexError, ValueError):
                 continue
         out.sort(key=lambda x: x["amount"], reverse=True)
-        return out or DEMO
+        return out if out else DEMO
     except Exception as e:
         print("Sheet error:", e)
         return DEMO
