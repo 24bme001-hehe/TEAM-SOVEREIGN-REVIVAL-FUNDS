@@ -41,11 +41,11 @@ if _logo_path.exists():
 
 # ── demo sponsors shown when sheet isn't configured ──────────────────────────
 DEMO = [
-    {"name": "Jigar Modi",  "amount": 2500},
-    {"name": "Raj Choksi",   "amount": 2500},
-    {"name": "Jinay Panchal",   "amount": 2500},
-    {"name": "Param Mehta",   "amount": 2500},
-    {"name": "Shishir Raghva",   "amount": 2500},
+    {"name": "Jigar Modi",  "amount": 10},
+    {"name": "Raj Choksi",   "amount": 10},
+    {"name": "Jinay Panchal",   "amount": 10},
+    {"name": "Param Mehta",   "amount": 10},
+    {"name": "Shishir Raghva",   "amount": 10},
     
    
 ]
