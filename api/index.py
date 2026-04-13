@@ -67,6 +67,10 @@ def get_sponsors():
         next(reader)  # skip header row
         for row in reader:
             try:
+                # Only show if column D (index 3) says "done" (case insensitive)
+                status = str(row[3]).strip().strip('"').lower() if len(row) > 3 else ""
+                if status != "done":
+                    continue
                 name   = str(row[1]).strip().strip('"')
                 amount = float(str(row[2]).replace(",", "").replace("₹", "").strip().strip('"'))
                 if name and amount > 0:
@@ -127,7 +131,7 @@ def build_page(sponsors):
 <style>
   html {{ touch-action: pan-y; }}
 </style>
-<title>Team Sovereign — Phoenix eBaja Sponsors</title>
+<title>Alumni: The Fuel of Phoenix — Team Sovereign</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@700&family=Exo+2:wght@400;600;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
@@ -297,10 +301,10 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
 
 <div class="page">
   <header>
-    <div class="team-lbl">Team Sovereign</div>
-    <div class="title">eBaja Sponsors</div>
-    <div class="sub">PHOENIX &nbsp;·&nbsp; SAE eBaja India</div>
-    <div class="phoenix-badge">🔥 &nbsp;Phoenix Edition&nbsp; 🔥</div>
+    <div class="team-lbl">Alumni</div>
+    <div class="title">The Fuel of Phoenix</div>
+    <div class="sub">SAE eBaja India &nbsp;·&nbsp; Team Sovereign</div>
+    <div class="phoenix-badge">🔥 &nbsp;Powering the Revival&nbsp; 🔥</div>
     <div class="divider"></div>
   </header>
 
@@ -329,6 +333,9 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
        target="_blank">➕ &nbsp;BECOME A SPONSOR</a>
     <p style="margin-top:1rem;font-size:.78rem;color:var(--silver);opacity:.55;letter-spacing:.12em">
       Your name appears here after payment is confirmed
+    </p>
+    <p style="margin-top:.6rem;font-size:.78rem;color:var(--gold);opacity:.75;letter-spacing:.1em">
+      🏎️ &nbsp;Your name will be displayed on our Phoenix eBaja vehicle at the SAE competition
     </p>
   </div>
 
