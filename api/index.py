@@ -59,6 +59,10 @@ def get_sponsors():
         next(reader)  # skip header row
         for row in reader:
             try:
+                # Column D (index 3) must say "done" to show on website
+                status = str(row[3]).strip().strip('"').lower() if len(row) > 3 else ""
+                if status != "done":
+                    continue
                 name   = str(row[1]).strip().strip('"')
                 amount = float(str(row[2]).replace(",", "").replace("₹", "").strip().strip('"'))
                 if name and amount > 0:
@@ -159,12 +163,10 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   to  {{filter:invert(1) brightness(2.0) drop-shadow(0 0 36px rgba(240,192,64,1));}}
 }}
 
-.team-lbl{{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);
-           letter-spacing:.55em;color:var(--blue2);margin-bottom:.2rem}}
-.title{{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,8vw,5.5rem);
-        letter-spacing:.06em;line-height:1;
-        background:linear-gradient(90deg,var(--silver) 20%,#fff 50%,var(--blue2) 80%);
-        -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}}
+.team-lbl{{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,8vw,5.5rem);
+           letter-spacing:.15em;color:var(--gold);margin-bottom:.2rem;font-weight:900}}
+.title{{font-family:'Bebas Neue',sans-serif;font-size:clamp(1rem,3vw,1.8rem);
+        letter-spacing:.25em;line-height:1;color:var(--silver);opacity:.75}}
 .sub{{font-size:clamp(.75rem,1.4vw,.95rem);color:var(--silver);letter-spacing:.25em;
       margin-top:.5rem;opacity:.8}}
 
@@ -289,10 +291,10 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
 
 <div class="page">
   <header>
-    <div class="team-lbl">Team Sovereign</div>
-    <div class="title">eBaja Sponsors</div>
-    <div class="sub">PHOENIX &nbsp;·&nbsp; SAE eBaja India</div>
-    <div class="phoenix-badge">🔥 &nbsp;Phoenix Edition&nbsp; 🔥</div>
+    <div class="team-lbl">Alumni: The Fuel of Phoenix</div>
+    <div class="title">eBaja Sponsors · Team Sovereign</div>
+    <div class="sub">SAE eBaja India &nbsp;·&nbsp; Phoenix Edition</div>
+    <div class="phoenix-badge">🔥 &nbsp;Powering the Revival&nbsp; 🔥</div>
     <div class="divider"></div>
   </header>
 
