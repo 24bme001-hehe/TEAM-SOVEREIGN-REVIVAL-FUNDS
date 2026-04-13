@@ -39,16 +39,8 @@ _logo_path = _base / "logo.png"
 if _logo_path.exists():
     _b64_logo = base64.b64encode(_logo_path.read_bytes()).decode()
 
-# ── demo sponsors shown when sheet isn't configured ──────────────────────────
-DEMO = [
-    {"name": "Jigar Modi",  "amount": 2500},
-    {"name": "Raj Choksi",   "amount": 2500},
-    {"name": "Jinay Panchal",   "amount": 2500},
-    {"name": "Param Mehta",   "amount": 2500},
-    {"name": "Shishir Raghva",   "amount": 2500},
-    
-   
-]
+# ── no demo sponsors — show empty if sheet has no confirmed entries ──────────
+DEMO = []
 
 
 def get_sponsors():
@@ -67,10 +59,6 @@ def get_sponsors():
         next(reader)  # skip header row
         for row in reader:
             try:
-                # Only show if column D (index 3) says "done" (case insensitive)
-                status = str(row[3]).strip().strip('"').lower() if len(row) > 3 else ""
-                if status != "done":
-                    continue
                 name   = str(row[1]).strip().strip('"')
                 amount = float(str(row[2]).replace(",", "").replace("₹", "").strip().strip('"'))
                 if name and amount > 0:
@@ -117,8 +105,8 @@ def build_page(sponsors):
         )
 
     collage = "\n    ".join(spans) if spans else (
-        '<p style="color:#c8d8e8;opacity:.6;letter-spacing:.2em">'
-        'No sponsors yet — be the first!</p>')
+        '<p style="color:#c8d8e8;opacity:.3;letter-spacing:.2em;font-size:.85rem">'
+        'No confirmed sponsors yet</p>')
 
     logo_html = ''
 
@@ -131,7 +119,7 @@ def build_page(sponsors):
 <style>
   html {{ touch-action: pan-y; }}
 </style>
-<title>Alumni: The Fuel of Phoenix — Team Sovereign</title>
+<title>Team Sovereign — Phoenix eBaja Sponsors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@700&family=Exo+2:wght@400;600;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
@@ -301,10 +289,10 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
 
 <div class="page">
   <header>
-    <div class="team-lbl">Alumni</div>
-    <div class="title">The Fuel of Phoenix</div>
-    <div class="sub">SAE eBaja India &nbsp;·&nbsp; Team Sovereign</div>
-    <div class="phoenix-badge">🔥 &nbsp;Powering the Revival&nbsp; 🔥</div>
+    <div class="team-lbl">Team Sovereign</div>
+    <div class="title">eBaja Sponsors</div>
+    <div class="sub">PHOENIX &nbsp;·&nbsp; SAE eBaja India</div>
+    <div class="phoenix-badge">🔥 &nbsp;Phoenix Edition&nbsp; 🔥</div>
     <div class="divider"></div>
   </header>
 
@@ -327,15 +315,25 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
     {collage}
   </div>
 
-  <div style="margin-top:2rem;text-align:center">
+  <div style="margin-top:3rem;text-align:center;width:min(700px,92%)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);
+                letter-spacing:.15em;color:var(--silver);margin-bottom:.6rem">
+      WHAT TEAM SOVEREIGN GIVES YOU
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:clamp(1.1rem,3.5vw,1.8rem);
+                letter-spacing:.1em;
+                background:linear-gradient(90deg,var(--orange),var(--gold),var(--orange));
+                background-size:200% auto;
+                -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+                background-clip:text;animation:shimmer 3s linear infinite;
+                margin-bottom:1.5rem">
+      A Special Place For Your Name On Our Phoenix
+    </div>
     <a class="cta"
        href="https://docs.google.com/forms/d/e/1FAIpQLSc1fMKYqQpiBFFi_T4JjJ79QMnrMxwUqFx30XtEVB9u9uR3Hg/viewform"
        target="_blank">➕ &nbsp;BECOME A SPONSOR</a>
     <p style="margin-top:1rem;font-size:.78rem;color:var(--silver);opacity:.55;letter-spacing:.12em">
       Your name appears here after payment is confirmed
-    </p>
-    <p style="margin-top:.6rem;font-size:.78rem;color:var(--gold);opacity:.75;letter-spacing:.1em">
-      🏎️ &nbsp;Your name will be displayed on our Phoenix eBaja vehicle at the SAE competition
     </p>
   </div>
 
