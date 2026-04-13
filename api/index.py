@@ -64,7 +64,8 @@ def get_sponsors():
                 if status != "done":
                     continue
                 name   = str(row[1]).strip().strip('"')
-                amount = float(str(row[2]).replace(",", "").replace("₹", "").strip().strip('"'))
+                # Column I (index 8) = Amount
+                amount = float(str(row[8]).replace(",", "").replace("₹", "").strip().strip('"'))
                 if name and amount > 0:
                     out.append({"name": name, "amount": amount})
             except (IndexError, ValueError):
