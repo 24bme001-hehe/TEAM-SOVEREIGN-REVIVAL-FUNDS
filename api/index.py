@@ -59,8 +59,8 @@ def get_sponsors():
         next(reader)  # skip header row
         for row in reader:
             try:
-                # Column D (index 3) must say "done" to show on website
-                status = str(row[3]).strip().strip('"').lower() if len(row) > 3 else ""
+                # Column E (index 4) must say "done" to show on website
+                status = str(row[4]).strip().strip('"').lower() if len(row) > 4 else ""
                 if status != "done":
                     continue
                 name   = str(row[1]).strip().strip('"')
