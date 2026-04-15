@@ -293,8 +293,7 @@ footer{{margin-top:1.8rem;text-align:center;font-size:.7rem;
 <div class="page">
   <header>
     <div class="team-lbl">Alumni: The Fuel of Phoenix</div>
-    <div class="title">eBaja Sponsors · Team Sovereign</div>
-    <div class="sub">SAE eBaja India &nbsp;·&nbsp; Phoenix Edition</div>
+    <div class="sub">PDEU &nbsp;·&nbsp; SAE eBaja India &nbsp;·&nbsp; Phoenix Edition</div>
     <div class="phoenix-badge">🔥 &nbsp;Powering the Revival&nbsp; 🔥</div>
     <div class="divider"></div>
   </header>
