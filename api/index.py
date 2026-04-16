@@ -363,7 +363,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   <div style="margin-top:3rem;text-align:center;width:min(700px,92%)">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);
                 letter-spacing:.15em;color:var(--silver);margin-bottom:.6rem">
-      WHAT TEAM SOVEREIGN GIVES YOU
+      WHAT TEAM BAJA GIVES YOU
     </div>
     <div style="font-family:'Cinzel',serif;font-size:clamp(1.1rem,3.5vw,1.8rem);
                 letter-spacing:.1em;
