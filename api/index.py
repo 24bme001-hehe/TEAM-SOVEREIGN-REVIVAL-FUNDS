@@ -82,7 +82,7 @@ def inr(n):
     if n >= 100000:
         return f"₹{n/100000:.1f}L"
     elif n >= 1000:
-        return f"₹{n/1000:.0f}K"
+        return f"₹{n/1000:.1f}K"
     return f"₹{n:,.0f}"
 
 def inr_full(n):
@@ -125,10 +125,7 @@ def build_page(sponsors):
         '<p style="color:#c8d8e8;opacity:.3;letter-spacing:.2em;font-size:.85rem">'
         'No confirmed sponsors yet</p>')
 
-    logo_html = (
-        f'<img class="sovereign-logo" src="{logo_src}" alt="Sovereign"/>'
-        if logo_src else ''
-    )
+    logo_html = ''
 
     return f"""<!DOCTYPE html>
 <html lang="en">
