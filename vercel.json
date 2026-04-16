@@ -1,12 +1,5 @@
 {
   "version": 2,
-  "redirects": [
-    {
-      "source": "/revival-funds",
-      "destination": "https://team-sovereign-revival-funds.vercel.app/",
-      "permanent": true
-    }
-  ],
   "builds": [
     {
       "src": "api/index.py",
