@@ -57,25 +57,29 @@ def get_sponsors():
         with urllib.request.urlopen(req, timeout=15) as r:
             content = r.read().decode("utf-8")
         out = []
+        under_review = []
         reader = csv.reader(io.StringIO(content))
         next(reader)  # skip header row
         for row in reader:
             try:
-                status = str(row[10]).strip().strip('"').lower() if len(row) > 10 else ""
-                if status != "done":
-                    continue
                 name   = str(row[1]).strip().strip('"')
-                amount = float(str(row[8]).replace(",", "").replace("₹", "").strip().strip('"'))
-                if name and amount > 0:
-                    out.append({"name": name, "amount": amount})
+                if not name:
+                    continue
+                status = str(row[10]).strip().strip('"').lower() if len(row) > 10 else ""
+                if status == "done":
+                    amount = float(str(row[8]).replace(",", "").replace("₹", "").strip().strip('"'))
+                    if amount > 0:
+                        out.append({"name": name, "amount": amount})
+                else:
+                    under_review.append(name)
             except (IndexError, ValueError):
                 continue
         out.sort(key=lambda x: x["amount"], reverse=True)
-        print(f"Loaded {len(out)} sponsors from sheet")
-        return out if out else DEMO
+        print(f"Loaded {len(out)} sponsors, {len(under_review)} under review")
+        return out if out else DEMO, under_review
     except Exception as e:
         print("Sheet error:", e)
-        return DEMO
+        return DEMO, []
 
 
 def inr(n):
@@ -89,7 +93,7 @@ def inr_full(n):
     return f"₹{n:,.0f}"
 
 
-def build_page(sponsors):
+def build_page(sponsors, under_review=[]):
     atv_src  = (f'data:image/png;base64,{_b64_img}'
                 if _b64_img else '')
     logo_src = (f'data:image/png;base64,{_b64_logo}'
@@ -97,26 +101,22 @@ def build_page(sponsors):
 
     total    = sum(s["amount"] for s in sponsors)
     top_name = sponsors[0]["name"].split()[0] if sponsors else "—"
-    max_a    = sponsors[0]["amount"]  if sponsors else 1
-    min_a    = sponsors[-1]["amount"] if sponsors else 0
-    rng      = max(max_a - min_a, 1)
 
     # funding bar
     pct         = min(total / FUNDING_GOAL * 100, 100)
     pct_display = f"{pct:.1f}"
     remaining   = max(FUNDING_GOAL - total, 0)
 
-    # Build each sponsor <span>
+    # Build each sponsor <span> — all same font size (32px)
     spans = []
     for i, s in enumerate(sponsors):
-        ratio = (s["amount"] - min_a) / rng
-        fs    = round(ratio * 72 + 17)
-        tier  = ("tier-1" if ratio >= 0.75 else
-                 "tier-2" if ratio >= 0.45 else
-                 "tier-3" if ratio >= 0.2  else "tier-4")
+        ratio = (s["amount"] - min(sp["amount"] for sp in sponsors) if sponsors else 0)
+        tier  = ("tier-1" if s["amount"] >= 5000 else
+                 "tier-2" if s["amount"] >= 2000 else
+                 "tier-3" if s["amount"] >= 500  else "tier-4")
         spans.append(
             f'<span class="sponsor-name {tier}" '
-            f'style="font-size:{fs}px;animation-delay:{i*0.05:.2f}s" '
+            f'style="font-size:32px;animation-delay:{i*0.05:.2f}s" '
             f'data-amount="{inr_full(s["amount"])}">'
             f'{s["name"]}</span>'
         )
@@ -126,6 +126,25 @@ def build_page(sponsors):
         'No confirmed sponsors yet</p>')
 
     logo_html = ''
+
+    # Build under review section
+    if under_review:
+        review_items = " ".join(
+            f'<span style="background:rgba(255,106,0,.12);border:1px solid rgba(255,106,0,.3);'
+            f'color:#ffb347;padding:.3rem .9rem;border-radius:20px;font-size:.82rem;'
+            f'letter-spacing:.05em;white-space:nowrap">{n}</span>'
+            for n in under_review
+        )
+        review_html = f'''
+  <div style="width:min(980px,96%);margin-top:1.5rem;padding:1.2rem 1.5rem;
+              background:rgba(255,106,0,.06);border:1px solid rgba(255,106,0,.2);
+              border-radius:16px;backdrop-filter:blur(10px)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;
+                color:#ff6a00;margin-bottom:.8rem">⏳ &nbsp;PAYMENT UNDER REVIEW</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem">{review_items}</div>
+  </div>'''
+    else:
+        review_html = ''
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -333,6 +352,8 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
     {collage}
   </div>
 
+  {review_html}
+
   <!-- ── FUNDING PROGRESS BAR ── -->
   <div class="funding-wrap">
     <div class="funding-header">
@@ -404,7 +425,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path=""):
-    sponsors = get_sponsors()
-    return Response(build_page(sponsors), mimetype="text/html")
+    sponsors, under_review = get_sponsors()
+    return Response(build_page(sponsors, under_review), mimetype="text/html")
 
 # Vercel looks for a variable called `app`
