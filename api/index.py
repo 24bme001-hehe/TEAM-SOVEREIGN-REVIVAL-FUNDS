@@ -483,7 +483,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
                   color:var(--gold);margin-bottom:1rem;text-align:center">
         🏆 &nbsp;OUR MENTORS
       </div>
-      <p style="text-align:center;font-size:.95rem;color:var(--silver);opacity:.8;
+      <p style="text-align:center;font-size:1.2rem;font-weight:700;color:#fff;opacity:1;
                 line-height:1.8;max-width:620px;margin:0 auto 2rem">
         These are our mentors who are supporting us and helping us at every step
         throughout this process in every department.
