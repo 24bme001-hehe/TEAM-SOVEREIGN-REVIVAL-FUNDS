@@ -353,6 +353,19 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 
 @keyframes fadeUp{{from{{opacity:0;transform:translateY(24px)}}to{{opacity:1;transform:translateY(0)}}}}
 
+/* ── TABS ── */
+.tab-bar{{display:flex;width:min(980px,96%);border-bottom:2px solid rgba(255,255,255,.08);margin-bottom:1.8rem}}
+.tab-btn{{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.2em;
+  padding:.75rem 2rem;background:none;border:none;color:var(--silver);opacity:.45;
+  cursor:pointer;transition:opacity .2s,color .2s;position:relative}}
+.tab-btn::after{{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue2),var(--gold));border-radius:2px;
+  transform:scaleX(0);transition:transform .25s ease}}
+.tab-btn.active{{opacity:1;color:#fff}}
+.tab-btn.active::after{{transform:scaleX(1)}}
+.tab-panel{{display:none;width:100%;flex-direction:column;align-items:center}}
+.tab-panel.active{{display:flex}}
+
 /* ── tech pills ── */
 .tech-pill{{
   position:relative;
@@ -397,100 +410,104 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
     <div class="divider"></div>
   </header>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-v">{len(sponsors)}</div><div class="stat-l">SPONSORS</div></div>
-    <div class="stat"><div class="stat-v">{inr(total)}</div><div class="stat-l">TOTAL RAISED</div></div>
-    <div class="stat"><div class="stat-v">{top_name}</div><div class="stat-l">TOP SPONSOR</div></div>
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('main',this)">🏎️ &nbsp;Sponsors</button>
+    <button class="tab-btn" onclick="switchTab('mentors',this)">🎓 &nbsp;Mentors</button>
   </div>
 
-  <!-- Name wall collage -->
-  <div class="collage">
-    {collage}
-  </div>
-
-  {review_html}
-
-  {tech_html}
-
-  <!-- ── MENTOR DASHBOARD ── -->
-  <div style="width:min(980px,96%);margin-top:2rem;padding:1.8rem;
-              background:rgba(8,14,26,.65);border:1px solid rgba(240,192,64,.2);
-              border-radius:20px;backdrop-filter:blur(14px)">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.2em;
-                color:var(--gold);margin-bottom:.8rem;text-align:center">
-      🏆 &nbsp;OUR MENTORS
-    </div>
-    <p style="text-align:center;font-size:.85rem;color:var(--silver);opacity:.75;
-              letter-spacing:.05em;margin-bottom:1.2rem;line-height:1.7">
-      These are our mentors who are supporting us and helping us at every step throughout
-      this process in every department.
-    </p>
-    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
-      {mentor_cards}
-    </div>
-  </div>
-
-  <!-- ── FUNDING PROGRESS BAR ── -->
-  <div class="funding-wrap">
-    <div class="funding-header">
-      <div class="funding-title">🔥 &nbsp;Phoenix Funding Progress</div>
-      <div class="funding-pct">{pct_display}%</div>
+  <!-- ── SPONSORS TAB ── -->
+  <div class="tab-panel active" id="tab-main">
+    <div class="stats" style="width:100%;justify-content:center">
+      <div class="stat"><div class="stat-v">{len(sponsors)}</div><div class="stat-l">SPONSORS</div></div>
+      <div class="stat"><div class="stat-v">{inr(total)}</div><div class="stat-l">TOTAL RAISED</div></div>
+      <div class="stat"><div class="stat-v">{top_name}</div><div class="stat-l">TOP SPONSOR</div></div>
     </div>
 
-    <div class="bar-track" id="barTrack">
-      <div class="bar-fill" id="barFill" style="width:0%">
-        <div class="bar-tip">🔥</div>
+    <div class="collage" style="margin-top:1.5rem">
+      {collage}
+    </div>
+
+    {review_html}
+    {tech_html}
+
+    <div class="funding-wrap">
+      <div class="funding-header">
+        <div class="funding-title">🔥 &nbsp;Phoenix Funding Progress</div>
+        <div class="funding-pct">{pct_display}%</div>
       </div>
-      <div class="bar-goal-marker"></div>
-    </div>
-
-    <div class="funding-footer">
-      <div class="funding-raised">
-        Raised &nbsp;<strong>{inr_full(total)}</strong>
-        &nbsp;<span style="opacity:.5">of</span>
+      <div class="bar-track" id="barTrack">
+        <div class="bar-fill" id="barFill" style="width:0%">
+          <div class="bar-tip">🔥</div>
+        </div>
+        <div class="bar-goal-marker"></div>
       </div>
-      <div class="funding-goal-lbl">Goal: ₹7,60,000</div>
-      <div class="funding-remaining">
-        {"🎯 Goal reached!" if remaining == 0 else f"₹{remaining:,.0f} remaining"}
+      <div class="funding-footer">
+        <div class="funding-raised">Raised &nbsp;<strong>{inr_full(total)}</strong>&nbsp;<span style="opacity:.5">of</span></div>
+        <div class="funding-goal-lbl">Goal: ₹7,60,000</div>
+        <div class="funding-remaining">{"🎯 Goal reached!" if remaining == 0 else f"₹{{remaining:,.0f}} remaining"}</div>
       </div>
     </div>
+
+    <div style="margin-top:3rem;text-align:center;width:min(700px,92%)">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);
+                  letter-spacing:.15em;color:var(--silver);margin-bottom:.6rem">
+        WHAT TEAM BAJA GIVES YOU
+      </div>
+      <div style="font-family:'Cinzel',serif;font-size:clamp(1.1rem,3.5vw,1.8rem);
+                  letter-spacing:.1em;background:linear-gradient(90deg,var(--orange),var(--gold),var(--orange));
+                  background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+                  background-clip:text;animation:shimmer 3s linear infinite;margin-bottom:1.5rem">
+        A Special Place For Your Name On Our Phoenix
+      </div>
+      <a class="cta"
+         href="https://docs.google.com/forms/d/e/1FAIpQLSc1fMKYqQpiBFFi_T4JjJ79QMnrMxwUqFx30XtEVB9u9uR3Hg/viewform"
+         target="_blank">➕ &nbsp;BECOME A SPONSOR</a>
+      <p style="margin-top:1rem;font-size:.78rem;color:var(--silver);opacity:.55;letter-spacing:.12em">
+        Your name appears here after payment is confirmed
+      </p>
+    </div>
+    <div class="revival">The Revival of the Phoenix</div>
+    <div class="revival-line"></div>
   </div>
 
-  <!-- CTA section -->
-  <div style="margin-top:3rem;text-align:center;width:min(700px,92%)">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);
-                letter-spacing:.15em;color:var(--silver);margin-bottom:.6rem">
-      WHAT TEAM BAJA GIVES YOU
+  <!-- ── MENTORS TAB ── -->
+  <div class="tab-panel" id="tab-mentors">
+    <div style="width:min(980px,96%);margin-top:1rem;padding:2.5rem 2rem;
+                background:rgba(8,14,26,.65);border:1px solid rgba(240,192,64,.25);
+                border-radius:20px;backdrop-filter:blur(14px)">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.2em;
+                  color:var(--gold);margin-bottom:1rem;text-align:center">
+        🏆 &nbsp;OUR MENTORS
+      </div>
+      <p style="text-align:center;font-size:.95rem;color:var(--silver);opacity:.8;
+                line-height:1.8;max-width:620px;margin:0 auto 2rem">
+        These are our mentors who are supporting us and helping us at every step
+        throughout this process in every department.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center">
+        {mentor_cards}
+      </div>
     </div>
-    <div style="font-family:'Cinzel',serif;font-size:clamp(1.1rem,3.5vw,1.8rem);
-                letter-spacing:.1em;
-                background:linear-gradient(90deg,var(--orange),var(--gold),var(--orange));
-                background-size:200% auto;
-                -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-                background-clip:text;animation:shimmer 3s linear infinite;
-                margin-bottom:1.5rem">
-      A Special Place For Your Name On Our Phoenix
-    </div>
-    <a class="cta"
-       href="https://docs.google.com/forms/d/e/1FAIpQLSc1fMKYqQpiBFFi_T4JjJ79QMnrMxwUqFx30XtEVB9u9uR3Hg/viewform"
-       target="_blank">➕ &nbsp;BECOME A SPONSOR</a>
-    <p style="margin-top:1rem;font-size:.78rem;color:var(--silver);opacity:.55;letter-spacing:.12em">
-      Your name appears here after payment is confirmed
-    </p>
+    <div class="revival" style="margin-top:2rem">The Revival of the Phoenix</div>
+    <div class="revival-line"></div>
   </div>
 
-  <div class="revival">The Revival of the Phoenix</div>
-  <div class="revival-line"></div>
 </div>
 
 <script>
-  // Animate bar fill on load
+  function switchTab(id, btn) {{
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'main') {{
+      setTimeout(() => {{ document.getElementById('barFill').style.width = '{pct_display}%'; }}, 300);
+    }}
+  }}
   window.addEventListener('load', () => {{
-    setTimeout(() => {{
-      document.getElementById('barFill').style.width = '{pct_display}%';
-    }}, 300);
+    setTimeout(() => {{ document.getElementById('barFill').style.width = '{pct_display}%'; }}, 300);
   }});
-  // Auto-refresh every 5 min
   setTimeout(() => location.reload(), 5 * 60 * 1000);
 </script>
 </body>
