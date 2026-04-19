@@ -58,15 +58,22 @@ def get_sponsors():
             content = r.read().decode("utf-8")
         out = []
         under_review = []
+        tech_helpers = []
         reader = csv.reader(io.StringIO(content))
         next(reader)  # skip header row
         for row in reader:
             try:
-                name   = str(row[1]).strip().strip('"')
+                name = str(row[1]).strip().strip('"')
                 if not name:
                     continue
                 status = str(row[10]).strip().strip('"').lower() if len(row) > 10 else ""
-                if status == "done":
+                # Column M (index 12) = how they can help
+                help_field = str(row[12]).strip().strip('"') if len(row) > 12 else ""
+
+                if "technical" in help_field.lower():
+                    # Goes to tech helpers bar with hover showing their field
+                    tech_helpers.append({"name": name, "field": help_field})
+                elif status == "done":
                     amount = float(str(row[8]).replace(",", "").replace("₹", "").strip().strip('"'))
                     if amount > 0:
                         out.append({"name": name, "amount": amount})
@@ -74,12 +81,13 @@ def get_sponsors():
                     under_review.append(name)
             except (IndexError, ValueError):
                 continue
-        out.sort(key=lambda x: x["amount"], reverse=True)
-        print(f"Loaded {len(out)} sponsors, {len(under_review)} under review")
-        return out if out else DEMO, under_review
+        # Latest first (reverse order — last row = most recent)
+        out.reverse()
+        print(f"Loaded {len(out)} sponsors, {len(under_review)} under review, {len(tech_helpers)} tech helpers")
+        return out if out else DEMO, under_review, tech_helpers
     except Exception as e:
         print("Sheet error:", e)
-        return DEMO, []
+        return DEMO, [], []
 
 
 def inr(n):
@@ -93,7 +101,7 @@ def inr_full(n):
     return f"₹{n:,.0f}"
 
 
-def build_page(sponsors, under_review=[]):
+def build_page(sponsors, under_review=[], tech_helpers=[]):
     atv_src  = (f'data:image/png;base64,{_b64_img}'
                 if _b64_img else '')
     logo_src = (f'data:image/png;base64,{_b64_logo}'
@@ -145,6 +153,35 @@ def build_page(sponsors, under_review=[]):
   </div>'''
     else:
         review_html = ''
+
+    # Build tech helpers bar
+    if tech_helpers:
+        tech_items = " ".join(
+            f'<span class="tech-pill" data-field="{h["field"]}">{h["name"]}'
+            f'<span class="tech-tooltip">{h["field"]}</span></span>'
+            for h in tech_helpers
+        )
+        tech_html = f'''
+  <div style="width:min(980px,96%);margin-top:1.5rem;padding:1.2rem 1.5rem;
+              background:rgba(14,94,245,.06);border:1px solid rgba(14,94,245,.25);
+              border-radius:16px;backdrop-filter:blur(10px)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;
+                color:var(--blue2);margin-bottom:.8rem">🔧 &nbsp;TECHNICAL SUPPORT TEAM</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem">{tech_items}</div>
+  </div>'''
+    else:
+        tech_html = ''
+
+    # Mentor dashboard
+    mentors = ["Shishir Raghava", "Jigar Modi", "Raj Choksi", "Param Mehta"]
+    mentor_cards = "".join(
+        f'<div style="background:rgba(14,94,245,.1);border:1px solid rgba(14,94,245,.3);'
+        f'border-radius:12px;padding:.9rem 1.4rem;text-align:center;min-width:140px;flex:1">'
+        f'<div style="font-size:2rem;margin-bottom:.4rem">🎓</div>'
+        f'<div style="font-family:\'Rajdhani\',sans-serif;font-weight:700;font-size:1.05rem;'
+        f'color:#e8e8ff">{m}</div></div>'
+        for m in mentors
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -314,6 +351,24 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 @keyframes shimmer{{to{{background-position:200% center}}}}
 
 @keyframes fadeUp{{from{{opacity:0;transform:translateY(24px)}}to{{opacity:1;transform:translateY(0)}}}}
+
+/* ── tech pills ── */
+.tech-pill{{
+  position:relative;
+  background:rgba(14,94,245,.15);border:1px solid rgba(14,94,245,.35);
+  color:#a8c4ff;padding:.3rem .9rem;border-radius:20px;font-size:.82rem;
+  letter-spacing:.05em;white-space:nowrap;cursor:default;
+  transition:background .2s;
+}}
+.tech-pill:hover{{background:rgba(14,94,245,.28)}}
+.tech-tooltip{{
+  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;
+  transform:translateX(-50%);background:rgba(8,14,26,.97);
+  border:1px solid var(--blue2);color:#fff;font-size:.72rem;
+  padding:5px 12px;border-radius:8px;white-space:nowrap;z-index:20;
+  letter-spacing:.05em;
+}}
+.tech-pill:hover .tech-tooltip{{display:block}}
 @media(max-width:480px){{
   .stats{{gap:1rem}}.stat{{padding:.6rem 1rem}}
   .collage{{gap:.4rem .8rem;padding:1.2rem 1rem}}
@@ -353,6 +408,26 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   </div>
 
   {review_html}
+
+  {tech_html}
+
+  <!-- ── MENTOR DASHBOARD ── -->
+  <div style="width:min(980px,96%);margin-top:2rem;padding:1.8rem;
+              background:rgba(8,14,26,.65);border:1px solid rgba(240,192,64,.2);
+              border-radius:20px;backdrop-filter:blur(14px)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.2em;
+                color:var(--gold);margin-bottom:.8rem;text-align:center">
+      🏆 &nbsp;OUR MENTORS
+    </div>
+    <p style="text-align:center;font-size:.85rem;color:var(--silver);opacity:.75;
+              letter-spacing:.05em;margin-bottom:1.2rem;line-height:1.7">
+      These are our mentors who are supporting us and helping us at every step throughout
+      this process in every department.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+      {mentor_cards}
+    </div>
+  </div>
 
   <!-- ── FUNDING PROGRESS BAR ── -->
   <div class="funding-wrap">
@@ -425,7 +500,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path=""):
-    sponsors, under_review = get_sponsors()
-    return Response(build_page(sponsors, under_review), mimetype="text/html")
+    sponsors, under_review, tech_helpers = get_sponsors()
+    return Response(build_page(sponsors, under_review, tech_helpers), mimetype="text/html")
 
 # Vercel looks for a variable called `app`
