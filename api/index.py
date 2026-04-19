@@ -67,12 +67,15 @@ def get_sponsors():
                 if not name:
                     continue
                 status = str(row[10]).strip().strip('"').lower() if len(row) > 10 else ""
-                # Column M (index 12) = how they can help
-                help_field = str(row[12]).strip().strip('"') if len(row) > 12 else ""
+                # Column F (index 5) = "How can you help us"
+                help_type = str(row[5]).strip().strip('"') if len(row) > 5 else ""
+                # Column M (index 12) = specific expertise (shown on hover)
+                expertise = str(row[12]).strip().strip('"') if len(row) > 12 else ""
 
-                if "technical" in help_field.lower():
-                    # Goes to tech helpers bar with hover showing their field
-                    tech_helpers.append({"name": name, "field": help_field})
+                if "technical" in help_type.lower():
+                    # Show name in tech bar, expertise on hover (fallback to help_type if M is empty)
+                    hover_text = expertise if expertise else help_type
+                    tech_helpers.append({"name": name, "field": hover_text})
                 elif status == "done":
                     amount = float(str(row[8]).replace(",", "").replace("₹", "").strip().strip('"'))
                     if amount > 0:
