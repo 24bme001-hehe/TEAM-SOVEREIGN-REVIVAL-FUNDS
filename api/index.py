@@ -122,12 +122,14 @@ def build_page(sponsors, under_review=[], tech_helpers=[]):
     remaining   = max(FUNDING_GOAL - total, 0)
     rem_str     = "₹{:,.0f} remaining".format(remaining)
 
+    # These names always show in white, everyone else in yellow
+    WHITE_NAMES = {"aarsh", "vraj", "niket", "himadri arjariya", "devdatta", "nilanshu", "yash"}
+
     # Build each sponsor <span> — all same font size (32px)
-    # Top donor = gold/yellow, everyone else = white
     spans = []
     for i, s in enumerate(sponsors):
-        is_top = s["name"] == top_sponsor_name
-        color = "var(--gold)" if is_top else "#ffffff"
+        is_white = s["name"].lower() in WHITE_NAMES or any(w in s["name"].lower() for w in WHITE_NAMES)
+        color = "#ffffff" if is_white else "var(--gold)"
         spans.append(
             f'<span class="sponsor-name" '
             f'style="font-size:32px;animation-delay:{i*0.05:.2f}s;color:{color}" '
