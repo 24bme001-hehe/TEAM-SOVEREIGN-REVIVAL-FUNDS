@@ -111,7 +111,10 @@ def build_page(sponsors, under_review=[], tech_helpers=[]):
                 if _b64_logo else '')
 
     total    = sum(s["amount"] for s in sponsors)
-    top_name = sponsors[0]["name"].split()[0] if sponsors else "—"
+    # Top sponsor by highest amount
+    top_sponsor = max(sponsors, key=lambda x: x["amount"]) if sponsors else None
+    top_name = top_sponsor["name"].split()[0] if top_sponsor else "—"
+    top_sponsor_name = top_sponsor["name"] if top_sponsor else ""
 
     # funding bar
     pct         = min(total / FUNDING_GOAL * 100, 100)
@@ -120,15 +123,14 @@ def build_page(sponsors, under_review=[], tech_helpers=[]):
     rem_str     = "₹{:,.0f} remaining".format(remaining)
 
     # Build each sponsor <span> — all same font size (32px)
+    # Top donor = gold/yellow, everyone else = white
     spans = []
     for i, s in enumerate(sponsors):
-        ratio = (s["amount"] - min(sp["amount"] for sp in sponsors) if sponsors else 0)
-        tier  = ("tier-1" if s["amount"] >= 5000 else
-                 "tier-2" if s["amount"] >= 2000 else
-                 "tier-3" if s["amount"] >= 500  else "tier-4")
+        is_top = s["name"] == top_sponsor_name
+        color = "var(--gold)" if is_top else "#ffffff"
         spans.append(
-            f'<span class="sponsor-name {tier}" '
-            f'style="font-size:32px;animation-delay:{i*0.05:.2f}s" '
+            f'<span class="sponsor-name" '
+            f'style="font-size:32px;animation-delay:{i*0.05:.2f}s;color:{color}" '
             f'data-amount="{inr_full(s["amount"])}">'
             f'{s["name"]}</span>'
         )
