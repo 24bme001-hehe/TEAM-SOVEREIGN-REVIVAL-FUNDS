@@ -116,20 +116,30 @@ def build_page(sponsors, under_review=[], tech_helpers=[]):
     top_name = top_sponsor["name"].split()[0] if top_sponsor else "—"
     top_sponsor_name = top_sponsor["name"] if top_sponsor else ""
 
+    # These names always show in white, everyone else in yellow
+    WHITE_NAMES = {"aarsh", "vraj", "niket", "himadri arjariya", "devdatta", "nilanshu", "yash"}
+
+    def is_white_name(name):
+        return name.lower() in WHITE_NAMES or any(w in name.lower() for w in WHITE_NAMES)
+
+    # Split totals for bar
+    white_total  = sum(s["amount"] for s in sponsors if is_white_name(s["name"]))
+    yellow_total = sum(s["amount"] for s in sponsors if not is_white_name(s["name"]))
+    white_pct    = min(white_total / FUNDING_GOAL * 100, 100)
+    yellow_pct   = min(yellow_total / FUNDING_GOAL * 100, 100 - white_pct)
+    white_pct_s  = f"{white_pct:.2f}"
+    yellow_pct_s = f"{yellow_pct:.2f}"
+
     # funding bar
     pct         = min(total / FUNDING_GOAL * 100, 100)
     pct_display = f"{pct:.1f}"
     remaining   = max(FUNDING_GOAL - total, 0)
     rem_str     = "₹{:,.0f} remaining".format(remaining)
 
-    # These names always show in white, everyone else in yellow
-    WHITE_NAMES = {"aarsh", "vraj", "niket", "himadri arjariya", "devdatta", "nilanshu", "yash"}
-
     # Build each sponsor <span> — all same font size (32px)
     spans = []
     for i, s in enumerate(sponsors):
-        is_white = s["name"].lower() in WHITE_NAMES or any(w in s["name"].lower() for w in WHITE_NAMES)
-        color = "#ffffff" if is_white else "var(--gold)"
+        color = "#ffffff" if is_white_name(s["name"]) else "var(--gold)"
         spans.append(
             f'<span class="sponsor-name" '
             f'style="font-size:32px;animation-delay:{i*0.05:.2f}s;color:{color}" '
@@ -445,10 +455,35 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
         <div class="funding-pct">{pct_display}%</div>
       </div>
       <div class="bar-track" id="barTrack">
-        <div class="bar-fill" id="barFill" style="width:0%">
-          <div class="bar-tip">🔥</div>
-        </div>
+        <!-- Yellow segment (alumni/seniors) -->
+        <div id="barYellow" style="position:absolute;top:0;left:0;height:100%;width:0%;
+             border-radius:999px;background:var(--gold);
+             box-shadow:0 0 18px rgba(240,192,64,.6);
+             transition:width 1.4s cubic-bezier(.22,1,.36,1);z-index:1"></div>
+        <!-- White segment (team members) on top -->
+        <div id="barWhite" style="position:absolute;top:0;left:0;height:100%;width:0%;
+             border-radius:999px;background:#ffffff;
+             box-shadow:0 0 18px rgba(255,255,255,.4);
+             transition:width 1.4s cubic-bezier(.22,1,.36,1) 0.2s;z-index:2"></div>
+        <!-- Flame tip -->
+        <div id="barTip" style="position:absolute;top:50%;right:-1px;transform:translateY(-50%);
+             width:28px;height:28px;background:var(--gold);border-radius:50%;
+             border:2px solid rgba(8,14,26,.8);
+             box-shadow:0 0 14px rgba(240,192,64,.8),0 0 28px rgba(255,106,0,.5);
+             display:flex;align-items:center;justify-content:center;font-size:.85rem;z-index:3;
+             animation:tipPulse 1.5s ease-in-out infinite">🔥</div>
         <div class="bar-goal-marker"></div>
+      </div>
+      <!-- Legend -->
+      <div style="display:flex;gap:1.2rem;margin-top:.6rem;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--silver)">
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--gold)"></div>
+          Alumni &nbsp;₹{yellow_total:,.0f}
+        </div>
+        <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--silver)">
+          <div style="width:12px;height:12px;border-radius:50%;background:#fff"></div>
+          Team &nbsp;₹{white_total:,.0f}
+        </div>
       </div>
       <div class="funding-footer">
         <div class="funding-raised">Raised &nbsp;<strong>{inr_full(total)}</strong>&nbsp;<span style="opacity:.5">of</span></div>
@@ -504,18 +539,20 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 </div>
 
 <script>
+  function animateBars() {{
+    setTimeout(() => {{
+      document.getElementById('barYellow').style.width = '{yellow_pct_s}%';
+      document.getElementById('barWhite').style.width  = '{white_pct_s}%';
+    }}, 300);
+  }}
   function switchTab(id, btn) {{
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + id).classList.add('active');
     btn.classList.add('active');
-    if (id === 'main') {{
-      setTimeout(() => {{ document.getElementById('barFill').style.width = '{pct_display}%'; }}, 300);
-    }}
+    if (id === 'main') animateBars();
   }}
-  window.addEventListener('load', () => {{
-    setTimeout(() => {{ document.getElementById('barFill').style.width = '{pct_display}%'; }}, 300);
-  }});
+  window.addEventListener('load', animateBars);
   setTimeout(() => location.reload(), 5 * 60 * 1000);
 </script>
 </body>
