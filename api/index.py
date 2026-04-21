@@ -457,12 +457,12 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
       <div class="bar-track" id="barTrack">
         <!-- Yellow segment (alumni/seniors) -->
         <div id="barYellow" style="position:absolute;top:0;left:0;height:100%;width:0%;
-             border-radius:999px;background:var(--gold);
+             border-radius:999px 0 0 999px;background:var(--gold);
              box-shadow:0 0 18px rgba(240,192,64,.6);
              transition:width 1.4s cubic-bezier(.22,1,.36,1);z-index:1"></div>
         <!-- White segment (team members) on top -->
         <div id="barWhite" style="position:absolute;top:0;left:0;height:100%;width:0%;
-             border-radius:999px;background:#ffffff;
+             border-radius:0 999px 999px 0;background:#ffffff;
              box-shadow:0 0 18px rgba(255,255,255,.4);
              transition:width 1.4s cubic-bezier(.22,1,.36,1) 0.2s;z-index:2"></div>
         <!-- Flame tip -->
