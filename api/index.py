@@ -542,6 +542,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
   function animateBars() {{
     setTimeout(() => {{
       document.getElementById('barYellow').style.width = '{yellow_pct_s}%';
+      document.getElementById('barWhite').style.left  = '{yellow_pct_s}%';
       document.getElementById('barWhite').style.width  = '{white_pct_s}%';
     }}, 300);
   }}
