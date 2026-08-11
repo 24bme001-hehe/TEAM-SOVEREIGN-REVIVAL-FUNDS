@@ -208,7 +208,7 @@ def build_page(sponsors, under_review=[], tech_helpers=[]):
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <style>html {{ touch-action: pan-y; }}</style>
-<title>Team Sovereign — Alumni: The Fuel of Phoenix</title>
+<title>Team Sovereign — Team Sovereign: Phoenix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@700&family=Exo+2:wght@400;600;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
@@ -422,7 +422,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
 
 <div class="page">
   <header>
-    <div class="team-lbl">Alumni: The Fuel of Phoenix</div>
+    <div class="team-lbl">Team Sovereign: Phoenix</div>
     <div class="sub">PDEU &nbsp;·&nbsp; SAE eBaja India &nbsp;·&nbsp; Phoenix Edition</div>
     <div class="phoenix-badge">🔥 &nbsp;Powering the Revival&nbsp; 🔥</div>
     <div class="divider"></div>
@@ -455,7 +455,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
         <div class="funding-pct">{pct_display}%</div>
       </div>
       <div class="bar-track" id="barTrack">
-        <!-- Yellow segment (alumni/seniors) -->
+        <!-- Yellow segment (sponsors) -->
         <div id="barYellow" style="position:absolute;top:0;left:0;height:100%;width:0%;
              border-radius:999px 0 0 999px;background:var(--gold);
              box-shadow:0 0 18px rgba(240,192,64,.6);
@@ -478,7 +478,7 @@ header{{text-align:center;padding:2.5rem 1rem 1rem;width:100%}}
       <div style="display:flex;gap:1.2rem;margin-top:.6rem;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--silver)">
           <div style="width:12px;height:12px;border-radius:50%;background:var(--gold)"></div>
-          Alumni &nbsp;₹{yellow_total:,.0f}
+          Sponsors &nbsp;₹{yellow_total:,.0f}
         </div>
         <div style="display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--silver)">
           <div style="width:12px;height:12px;border-radius:50%;background:#fff"></div>
